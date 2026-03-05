@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guidercise ~~ Workout Picker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf8f6;
+  --pink-soft: #ffe8f0;
+  --pink-mid: #ffd0e4;
+  --pink: #ec4899;
+  --pink-light: #f472b6;
+  --orange: #fb923c;
+  --text: #1a1a1a;
+  --muted: #64748b;
+  --dim: #94a3b8;
+  --border: rgba(219,112,147,0.2);
+  --card: rgba(255,192,203,0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* BG DECORATION */
+.bg-blobs {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  animation: floatBlob 10s ease-in-out infinite;
+}
+
+.blob1 {
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(236,72,153,0.14), transparent 70%);
+  top: -200px; left: -200px;
+}
+.blob2 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(251,146,60,0.1), transparent 70%);
+  bottom: -100px; right: -100px;
+  animation-delay: 4s;
+}
+.blob3 {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, rgba(244,114,182,0.12), transparent 70%);
+  top: 50%; left: 60%;
+  animation-delay: 2s;
+}
+
+@keyframes floatBlob {
+  0%, 100% { transform: translate(0,0); }
+  50% { transform: translate(20px, -25px); }
+}
+
+/* NAV */
+nav {
+  position: relative;
+  z-index: 10;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3rem;
+  background: rgba(250, 248, 246, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--pink), var(--pink-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-decoration: none;
+}
+
+.nav-back {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav-back:hover { color: var(--pink); }
+
+/* MAIN LAYOUT */
+.page {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 4rem 2rem;
+  gap: 3rem;
+}
+
+/* HEADER */
+.page-header {
+  text-align: center;
+  animation: fadeUp 0.7s ease both;
+}
+
+.page-header .label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pink);
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.page-header h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+}
+
+.page-header h1 em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--pink), var(--orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-header p {
+  margin-top: 1rem;
+  color: var(--muted);
+  font-size: 1.05rem;
+  font-weight: 300;
+  max-width: 480px;
+}
+
+/* OUTPUT AREA */
+.output-card {
+  width: 100%;
+  max-width: 700px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 32px;
+  padding: 3rem 2.5rem;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 60px rgba(219,112,147,0.15);
+  animation: fadeUp 0.7s ease 0.15s both;
+}
+
+.output-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--pink), var(--orange), transparent);
+}
+
+.output-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(236,72,153,0.07), transparent 60%);
+  pointer-events: none;
+}
+
+.output-empty {
+  text-align: center;
+  color: var(--dim);
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-style: italic;
+  font-weight: 300;
+}
+
+.output-empty .emoji {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+  font-style: normal;
+}
+
+.workout-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  width: 100%;
+}
+
+.workout-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 100px;
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  font-weight: 700;
+  border: 1.5px solid rgba(236,72,153,0.25);
+  animation: chipPop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+  position: relative;
+}
+
+/* Alternate chip colors */
+.workout-chip:nth-child(1) { background: rgba(236,72,153,0.1); color: #be185d; }
+.workout-chip:nth-child(2) { background: rgba(251,146,60,0.1); color: #c2410c; border-color: rgba(251,146,60,0.25); }
+.workout-chip:nth-child(3) { background: rgba(244,114,182,0.12); color: #9d174d; }
+.workout-chip:nth-child(4) { background: rgba(253,186,116,0.15); color: #92400e; border-color: rgba(253,186,116,0.3); }
+.workout-chip:nth-child(5) { background: rgba(236,72,153,0.08); color: #be185d; }
+.workout-chip:nth-child(6) { background: rgba(251,146,60,0.08); color: #c2410c; border-color: rgba(251,146,60,0.2); }
+
+@keyframes chipPop {
+  from { opacity: 0; transform: scale(0.5) translateY(16px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.chip-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: rgba(236,72,153,0.2);
+  font-size: 0.75rem;
+  font-style: normal;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  color: var(--pink);
+  flex-shrink: 0;
+}
+
+.workout-chip:nth-child(2) .chip-num { background: rgba(251,146,60,0.2); color: var(--orange); }
+.workout-chip:nth-child(3) .chip-num { background: rgba(244,114,182,0.2); color: var(--pink-light); }
+.workout-chip:nth-child(4) .chip-num { background: rgba(253,186,116,0.25); color: var(--orange); }
+.workout-chip:nth-child(5) .chip-num { background: rgba(236,72,153,0.2); color: var(--pink); }
+.workout-chip:nth-child(6) .chip-num { background: rgba(251,146,60,0.2); color: var(--orange); }
+
+/* DIVIDER HINT */
+.pick-count {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--dim);
+  margin-top: 1.25rem;
+  font-style: italic;
+}
+
+/* BIG BUTTON */
+.picker-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  animation: fadeUp 0.7s ease 0.3s both;
+}
+
+.big-btn {
+  position: relative;
+  padding: 1.4rem 3.5rem;
+  background: linear-gradient(135deg, var(--pink), var(--pink-light));
+  color: white;
+  border: none;
+  border-radius: 100px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(236,72,153,0.5);
+  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  letter-spacing: -0.3px;
+  overflow: hidden;
+}
+
+.big-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+  border-radius: inherit;
+}
+
+.big-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 16px 48px rgba(236,72,153,0.6);
+}
+
+.big-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 4px 16px rgba(236,72,153,0.4);
+}
+
+.big-btn.spin .btn-dice {
+  display: inline-block;
+  animation: spin 0.5s ease;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(720deg); }
+}
+
+.btn-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.btn-dice { font-size: 1.4rem; }
+
+/* CONTROLS ROW */
+.controls-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.count-label {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.count-btns {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.count-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.count-btn:hover {
+  border-color: var(--pink);
+  color: var(--pink);
+  background: rgba(236,72,153,0.08);
+}
+
+.count-btn.active {
+  background: var(--pink);
+  color: white;
+  border-color: var(--pink);
+}
+
+/* HISTORY */
+.history-section {
+  width: 100%;
+  max-width: 700px;
+  animation: fadeUp 0.7s ease 0.45s both;
+}
+
+.history-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.875rem 1.25rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  animation: fadeUp 0.3s ease both;
+}
+
+.history-num {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--dim);
+  width: 24px;
+  flex-shrink: 0;
+}
+
+.history-picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.history-tag {
+  padding: 0.3rem 0.75rem;
+  background: rgba(236,72,153,0.08);
+  border-radius: 100px;
+  font-size: 0.8rem;
+  color: var(--pink);
+  font-style: italic;
+  font-family: 'Fraunces', serif;
+}
+
+.history-time {
+  font-size: 0.75rem;
+  color: var(--dim);
+  flex-shrink: 0;
+}
+
+.empty-history {
+  text-align: center;
+  color: var(--dim);
+  font-size: 0.9rem;
+  padding: 1.5rem;
+  font-style: italic;
+}
+
+/* FOOTER */
+footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 2rem;
+  color: var(--dim);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border);
+  background: rgba(250,248,246,0.8);
+  backdrop-filter: blur(10px);
+}
+
+footer a { color: var(--pink); text-decoration: none; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  nav { padding: 0 1.5rem; }
+  .page { padding: 3rem 1.25rem; }
+  .output-card { padding: 2rem 1.5rem; min-height: 160px; }
+  .big-btn { padding: 1.2rem 2.5rem; font-size: 1.1rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-blobs">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+</div>
+
+<nav>
+  <a href="index.html" class="nav-logo">Guidercise!</a>
+  <a href="index.html" class="nav-back">← Back home</a>
+</nav>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <span class="label">🎲 Randomizer</span>
+    <h1>Pick my <em>workout</em></h1>
+    <p>Can't decide what to do today? Let us do the hard part. Press the button ~~ we'll handle the rest!</p>
+  </div>
+
+  <!-- OUTPUT -->
+  <div class="output-card" id="outputCard">
+    <div class="output-empty" id="emptyState">
+      <span class="emoji">🎱</span>
+      Your workout will appear here!
+    </div>
+    <div class="workout-list" id="workoutList" style="display:none;"></div>
+  </div>
+  <p class="pick-count" id="pickCount"></p>
+
+  <!-- BIG BUTTON + CONTROLS -->
+  <div class="picker-zone">
+    <button class="big-btn" id="pickBtn" onclick="pickWorkout()">
+      <div class="btn-inner">
+        <span class="btn-dice">🎲</span>
+        Pick my workout!
+      </div>
+    </button>
+
+    <div class="controls-row">
+      <span class="count-label">How many exercises?</span>
+      <div class="count-btns" id="countBtns">
+        <button class="count-btn" onclick="setCount(1)">1</button>
+        <button class="count-btn" onclick="setCount(2)">2</button>
+        <button class="count-btn active" onclick="setCount(3)">3</button>
+        <button class="count-btn" onclick="setCount(4)">4</button>
+        <button class="count-btn" onclick="setCount(5)">5</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="history-section">
+    <div class="history-title">📋 Previous picks</div>
+    <div class="history-list" id="historyList">
+      <div class="empty-history">Press the button to start generating workouts!</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  we all deserve to enjoy a good workout! c: &nbsp;·&nbsp;
+  <a href="index.html">Home</a> &nbsp;·&nbsp;
+  <a href="guidercise-app.html">Open App</a>
+</footer>
+
+<script>
+const allWorkouts = [
+  "Wrist rolls", "Neck stretch", "Shoulder shrugs",
+  "Deep breathing", "Seated twists", "Ankle circles",
+  "Gentle squats", "Wall push-ups", "Hip circles",
+  "Calf raises", "Arm circles", "Cat-cow stretch",
+  "Side bends", "Knee lifts", "Spinal stretch",
+  "Box breathing", "Chest opener", "Figure-four stretch",
+  "Seated marching", "Standing balance", "Toe taps",
+  "Low plank hold", "Glute bridges", "Bird-dog hold",
+  "Thread the needle", "Lateral arm raises", "Heel walks"
+];
+
+let pickCount = 3;
+let history = [];
+
+function setCount(n) {
+  pickCount = n;
+  document.querySelectorAll('.count-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i + 1 === n);
+  });
+}
+
+function pickWorkout() {
+  // Spin animation
+  const btn = document.getElementById('pickBtn');
+  btn.classList.add('spin');
+  setTimeout(() => btn.classList.remove('spin'), 500);
+
+  // Pick random unique items
+  const shuffled = [...allWorkouts].sort(() => Math.random() - 0.5);
+  const picks = shuffled.slice(0, pickCount);
+
+  // Show output
+  document.getElementById('emptyState').style.display = 'none';
+  const list = document.getElementById('workoutList');
+  list.style.display = 'flex';
+  list.innerHTML = picks.map((w, i) =>
+    `<div class="workout-chip" style="animation-delay:${i * 0.07}s">
+      <span class="chip-num">${i + 1}</span>
+      ${w}
+    </div>`
+  ).join('');
+
+  // Update pick count text
+  const names = picks.join(', ');
+  document.getElementById('pickCount').textContent =
+    `✨ ${picks.length} exercise${picks.length > 1 ? 's' : ''} selected ~~ go get it!!`;
+
+  // Add to history
+  const now = new Date();
+  const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  history.unshift({ picks, time });
+  if (history.length > 5) history.pop();
+  renderHistory();
+}
+
+function renderHistory() {
+  const container = document.getElementById('historyList');
+  if (history.length === 0) {
+    container.innerHTML = '<div class="empty-history">Press the button to start generating workouts!</div>';
+    return;
+  }
+  container.innerHTML = history.map((entry, i) =>
+    `<div class="history-item" style="animation-delay:${i * 0.05}s">
+      <span class="history-num">#${history.length - i}</span>
+      <div class="history-picks">
+        ${entry.picks.map(p => `<span class="history-tag">${p}</span>`).join('')}
+      </div>
+      <span class="history-time">${entry.time}</span>
+    </div>`
+  ).join('');
+}
+</script>
+
+</body>
+</html>

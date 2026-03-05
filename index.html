@@ -1,0 +1,854 @@
+
+localStorage.clear() to clear that silly local storage issue :,)
+
+<!DOCTYPE html> <!-- Tells the browser this is an HTML5 document -->
+<html lang="en"> <!-- Start of the HTML page, set to English -->
+<head> <!-- Everything in here is setup/metadata ~~ the user won't see it directly -->
+<meta charset="UTF-8"> <!-- Makes sure special characters (like emojis) display correctly -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Makes the page look good on phones and tablets -->
+<title>Guidercise yeah THE Guidercise ;3</title> <!-- The text that shows up in the browser tab -->
+
+<!-- Telling Google Fonts to connect early so fonts load faster -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<!-- Loading two fonts: Fraunces (the fancy serif headings) and DM Sans (the clean body text) -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style> /* All the visual styling lives in here */
+
+/* ─── CSS VARIABLES ─────────────────────────────────────────────────────────── */
+/* Think of these like named paint swatches ~~ change one value and it updates everywhere */
+:root {
+  --bg: #faf8f6;           /* The off-white page background */
+  --pink-soft: #ffe8f0;    /* Very light pink, used for section backgrounds */
+  --pink-mid: #ffd0e4;     /* Medium pink, not used much but available */
+  --pink: #ec4899;         /* The main brand pink ~~ used all over the place */
+  --pink-light: #f472b6;   /* Slightly lighter pink, used in gradients */
+  --orange: #fb923c;       /* Accent orange, used in the hero headline gradient */
+  --text: #1a1a1a;         /* Almost-black for main body text */
+  --muted: #64748b;        /* Medium grey for secondary/supporting text */
+  --dim: #94a3b8;          /* Lighter grey for labels and less important stuff */
+  --border: rgba(219,112,147,0.2);  /* A faint pink border color */
+  --card: rgba(255,192,203,0.12);   /* Very subtle pink tint for card backgrounds */
+}
+
+/* Reset default browser styles so everything starts from scratch */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Smooth scrolling when you click anchor links like #features */
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif; /* Default font for all body text */
+  background: var(--bg);             /* Off-white background on the whole page */
+  color: var(--text);                /* Dark text by default */
+  overflow-x: hidden;                /* No horizontal scrollbar if something pokes out */
+}
+
+/* ─── NAV ───────────────────────────────────────────────────────────────────── */
+nav {
+  position: fixed;                  /* Sticks to the top of the screen as you scroll */
+  top: 0; left: 0; right: 0;       /* Stretches all the way across */
+  height: 72px;                     /* Fixed height for the nav bar */
+  display: flex;                    /* Puts items in a row */
+  align-items: center;              /* Vertically centers everything in the nav */
+  justify-content: space-between;   /* Logo on the left, links on the right */
+  padding: 0 3rem;                  /* Side breathing room */
+  background: rgba(250, 248, 246, 0.85); /* Slightly transparent background */
+  backdrop-filter: blur(20px);      /* Blurs whatever's behind the nav (frosted glass effect) */
+  border-bottom: 1px solid var(--border); /* Subtle pink line under the nav */
+  z-index: 100;                     /* Makes sure nav floats above everything else */
+}
+
+.nav-logo {
+  font-family: 'Fraunces', serif;   /* Fancy serif font for the brand name */
+  font-size: 1.6rem;
+  font-weight: 700;
+  /* This makes the text show a pink gradient instead of a flat color */
+  background: linear-gradient(135deg, var(--pink), var(--pink-light));
+  -webkit-background-clip: text;    /* Clips the gradient to just the text shape (Chrome/Safari) */
+  -webkit-text-fill-color: transparent; /* Makes the actual text color invisible so gradient shows */
+  background-clip: text;            /* Same as above but the standard version */
+}
+
+.nav-links {
+  display: flex;       /* Puts nav links in a row */
+  gap: 2rem;           /* Space between each link */
+  align-items: center; /* Vertically aligns them nicely */
+}
+
+.nav-links a {
+  text-decoration: none;      /* Removes the underline from links */
+  color: var(--muted);        /* Grey by default */
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s;     /* Smoothly changes color on hover instead of snapping */
+}
+
+.nav-links a:hover { color: var(--pink); } /* Links turn pink when you hover over them */
+
+.nav-cta {
+  padding: 0.6rem 1.5rem;
+  background: linear-gradient(135deg, var(--pink), var(--pink-light)); /* Pink gradient pill button */
+  color: white !important;    /* Force white text even though .nav-links a sets grey */
+  border-radius: 100px;       /* Makes it a full pill/capsule shape */
+  font-weight: 600 !important;
+  box-shadow: 0 4px 14px rgba(236,72,153,0.4); /* Pink glow under the button */
+  transition: all 0.2s !important;
+}
+
+.nav-cta:hover {
+  transform: translateY(-1px);                          /* Button floats up slightly on hover */
+  box-shadow: 0 6px 20px rgba(236,72,153,0.5) !important; /* Shadow gets bigger */
+  color: white !important;                              /* Keep text white on hover */
+}
+
+/* ─── HERO ──────────────────────────────────────────────────────────────────── */
+.hero {
+  min-height: 100vh;              /* At least as tall as the screen */
+  display: flex;
+  flex-direction: column;         /* Stack children vertically */
+  align-items: center;            /* Center everything horizontally */
+  justify-content: center;        /* Center everything vertically */
+  text-align: center;
+  padding: 8rem 2rem 4rem;        /* Top padding is large to clear the fixed nav */
+  position: relative;             /* Needed so the blobs can be positioned inside it */
+  overflow: hidden;               /* Hides the blobs if they spill outside the hero */
+}
+
+/* Blobs are big blurry colored circles that create the soft background glow */
+.hero-blob {
+  position: absolute;             /* Floats freely, doesn't affect layout */
+  border-radius: 50%;             /* Perfect circle */
+  filter: blur(80px);             /* Very blurry so it looks like a soft glow */
+  pointer-events: none;           /* Can't accidentally click on them */
+  animation: float 8s ease-in-out infinite; /* They gently float up and down forever */
+}
+
+/* Each blob has a different size, color, and position */
+.blob1 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(236,72,153,0.18), transparent 70%); /* Pink fade-out circle */
+  top: -100px; left: -150px;     /* Positioned in the top-left, partially off-screen */
+  animation-delay: 0s;           /* Starts animating immediately */
+}
+
+.blob2 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(251,146,60,0.12), transparent 70%); /* Orange fade-out circle */
+  bottom: -100px; right: -100px; /* Positioned in the bottom-right */
+  animation-delay: 3s;           /* Starts floating 3 seconds later so it's out of sync with blob1 */
+}
+
+.blob3 {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, rgba(244,114,182,0.15), transparent 70%); /* Light pink circle */
+  top: 40%; left: 55%;           /* Roughly center-right of the hero */
+  animation-delay: 1.5s;         /* Starts halfway between blob1 and blob2 for variety */
+}
+
+/* The float animation ~~ just gently bobs up and down */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) scale(1); }       /* Normal position */
+  50% { transform: translateY(-30px) scale(1.05); }        /* Slightly up and a touch bigger */
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.2rem;
+  background: rgba(236,72,153,0.1);         /* Faint pink pill background */
+  border: 1px solid rgba(236,72,153,0.25);  /* Faint pink border */
+  border-radius: 100px;
+  font-size: 0.85rem;
+  color: var(--pink);
+  font-weight: 500;
+  margin-bottom: 2rem;
+  animation: fadeUp 0.8s ease both;         /* Fades and slides up when the page loads */
+}
+
+.hero-badge span {
+  width: 6px; height: 6px;
+  border-radius: 50%;               /* Tiny circle dot */
+  background: var(--pink);
+  box-shadow: 0 0 8px var(--pink);  /* Pink glow around the dot */
+  animation: pulse 2s infinite;     /* Dot pulses like a heartbeat */
+}
+
+/* Dot pulses by fading in and out */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }   /* Fully visible */
+  50% { opacity: 0.4; }      /* Dimmed in the middle */
+}
+
+.hero h1 {
+  font-family: 'Fraunces', serif;
+  /* clamp() means: no smaller than 3.5rem, ideally 8vw (scales with screen), no bigger than 7rem */
+  font-size: clamp(3.5rem, 8vw, 7rem);
+  font-weight: 900;
+  line-height: 1.05;                /* Tight line spacing for big headlines */
+  letter-spacing: -2px;            /* Slightly compressed letters, looks premium */
+  margin-bottom: 1.5rem;
+  animation: fadeUp 0.8s ease 0.1s both; /* Slight delay so it appears after the badge */
+}
+
+.hero h1 em {
+  font-style: italic;               /* The <em> text inside h1 is italic */
+  /* Pink-to-orange gradient on the italic text */
+  background: linear-gradient(135deg, var(--pink), var(--orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 1.25rem;
+  color: var(--muted);              /* Grey, lower visual priority than the headline */
+  max-width: 540px;                 /* Keeps lines from getting too long to read comfortably */
+  line-height: 1.7;                 /* Generous line spacing for readability */
+  margin-bottom: 3rem;
+  font-weight: 300;                 /* Light weight feels soft and approachable */
+  animation: fadeUp 0.8s ease 0.2s both; /* Appears slightly after the headline */
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;                        /* Space between the two buttons */
+  flex-wrap: wrap;                  /* On small screens the buttons wrap to a second line */
+  justify-content: center;
+  animation: fadeUp 0.8s ease 0.3s both; /* Buttons appear last in the sequence */
+  margin-bottom: 4rem;
+}
+
+.btn-primary {
+  padding: 1.1rem 2.5rem;
+  background: linear-gradient(135deg, var(--pink), var(--pink-light)); /* Pink gradient */
+  color: white;
+  border: none;
+  border-radius: 100px;             /* Pill shape */
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 6px 24px rgba(236,72,153,0.45); /* Pink drop shadow / glow */
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);                           /* Floats up on hover */
+  box-shadow: 0 10px 32px rgba(236,72,153,0.55);        /* Shadow grows to match */
+}
+
+.btn-secondary {
+  padding: 1.1rem 2.5rem;
+  background: transparent;          /* No fill, see-through */
+  color: var(--text);
+  border: 1.5px solid var(--border); /* Just an outline */
+  border-radius: 100px;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(236,72,153,0.06);     /* Very faint pink fill appears on hover */
+  border-color: rgba(236,72,153,0.4);    /* Border gets a bit more pink */
+}
+
+/* ─── STATS ROW ─────────────────────────────────────────────────────────────── */
+.hero-stats {
+  display: flex;
+  gap: 3rem;                         /* Space between each stat */
+  padding: 2rem 3rem;
+  background: var(--card);           /* Faint pink card background */
+  border: 1px solid var(--border);   /* Pink tinted border */
+  border-radius: 24px;               /* Rounded corners */
+  backdrop-filter: blur(20px);       /* Frosted glass effect */
+  animation: fadeUp 0.8s ease 0.4s both; /* Last thing to animate in on page load */
+}
+
+.hero-stat-num {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--pink);
+  display: block;                    /* Makes it take up its own line above the label */
+}
+
+.hero-stat-label {
+  font-size: 0.8rem;
+  color: var(--dim);                 /* Light grey */
+  text-transform: uppercase;         /* All caps */
+  letter-spacing: 0.8px;            /* Slightly spaced out letters */
+}
+
+/* Fades in while sliding up ~~ used for the staggered hero entrance animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); } /* Starts invisible and 24px lower */
+  to { opacity: 1; transform: translateY(0); }       /* Ends fully visible at normal position */
+}
+
+/* ─── FEATURES ──────────────────────────────────────────────────────────────── */
+.features {
+  padding: 7rem 3rem;              /* Lots of vertical breathing room */
+  max-width: 1200px;               /* Don't stretch too wide on big monitors */
+  margin: 0 auto;                  /* Center the section horizontally */
+}
+
+.section-label {
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 2px;             /* Widely spaced letters for the small label above headings */
+  text-transform: uppercase;
+  color: var(--pink);
+  margin-bottom: 1.2rem;
+}
+
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 4vw, 3.5rem); /* Responsive font size */
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+  letter-spacing: -1px;
+}
+
+.section-title em {
+  font-style: italic;
+  color: var(--pink);               /* Italic words in section titles are pink */
+}
+
+.section-sub {
+  text-align: center;
+  color: var(--muted);
+  font-size: 1.1rem;
+  margin-bottom: 4rem;
+  font-weight: 300;
+}
+
+.features-grid {
+  display: grid;
+  /* Auto-fills columns: each at least 320px wide, splits space evenly */
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;                     /* Space between cards */
+}
+
+.feature-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 2.5rem;
+  position: relative;               /* Needed for the ::before top-line effect */
+  overflow: hidden;                 /* Clips the top line if it escapes */
+  transition: all 0.3s ease;
+}
+
+/* The thin pink line that appears at the top of a card on hover */
+.feature-card::before {
+  content: '';                      /* Empty element, just for visual decoration */
+  position: absolute;
+  top: 0; left: 0; right: 0;       /* Full width line at the very top */
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--pink), transparent); /* Fades in from the center */
+  opacity: 0;                       /* Hidden by default */
+  transition: opacity 0.3s;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);                            /* Card lifts up on hover */
+  box-shadow: 0 24px 64px rgba(219,112,147,0.2);         /* Soft pink shadow underneath */
+}
+
+.feature-card:hover::before {
+  opacity: 1; /* Top line becomes visible when hovered */
+}
+
+.feature-icon {
+  font-size: 2.5rem;                /* Big emoji icons */
+  margin-bottom: 1.5rem;
+  display: block;                   /* Takes its own line */
+}
+
+.feature-card h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.3px;
+}
+
+.feature-card p {
+  color: var(--muted);
+  line-height: 1.7;
+  font-weight: 300;
+  font-size: 0.95rem;
+}
+
+/* The first (highlighted) feature card has a stronger pink tint */
+.feature-card.highlight {
+  background: linear-gradient(135deg, rgba(236,72,153,0.12), rgba(244,114,182,0.06));
+  border-color: rgba(236,72,153,0.3); /* A more visible border */
+}
+
+/* ─── HOW IT WORKS ──────────────────────────────────────────────────────────── */
+.how {
+  /* Soft pink at the top, fades back to the normal background at the bottom */
+  background: linear-gradient(180deg, var(--pink-soft) 0%, var(--bg) 100%);
+  padding: 7rem 3rem;
+}
+
+.how-inner {
+  max-width: 1000px;
+  margin: 0 auto; /* Centered */
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive columns */
+  gap: 2rem;
+  margin-top: 4rem;
+}
+
+.step {
+  text-align: center;
+  padding: 2rem;
+  position: relative;
+}
+
+.step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px; height: 56px;
+  border-radius: 16px;              /* Rounded square (not pill, not full circle) */
+  background: linear-gradient(135deg, var(--pink), var(--pink-light)); /* Pink gradient */
+  color: white;
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 20px rgba(236,72,153,0.35); /* Pink glow */
+}
+
+.step h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.step p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* ─── WORKOUT PICKER TEASER ─────────────────────────────────────────────────── */
+.picker-teaser {
+  padding: 7rem 3rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.picker-demo {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 32px;             /* Extra rounded for a softer feel */
+  padding: 4rem 3rem;
+  margin-top: 3rem;
+  position: relative;              /* Needed for the ::before glow */
+  overflow: hidden;
+}
+
+/* Subtle pink radial glow behind the demo area */
+.picker-demo::before {
+  content: '';
+  position: absolute;
+  inset: 0;                        /* Covers the whole card */
+  background: radial-gradient(circle at 50% 0%, rgba(236,72,153,0.1), transparent 60%);
+  pointer-events: none;            /* Doesn't interfere with clicking */
+}
+
+.picker-demo-label {
+  font-size: 0.8rem;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 1.5rem;
+}
+
+.demo-output {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--pink);
+  min-height: 60px;                /* Reserves space even when empty so the layout doesn't jump */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;                    /* Space between the workout tag pills */
+  flex-wrap: wrap;                 /* Tags wrap onto a new line if there are too many */
+  margin-bottom: 2rem;
+  transition: all 0.4s ease;
+}
+
+.demo-tag {
+  padding: 0.5rem 1.2rem;
+  background: rgba(236,72,153,0.12);
+  border: 1px solid rgba(236,72,153,0.25);
+  border-radius: 100px;            /* Pill shape for the workout name tags */
+  font-size: 1.1rem;
+  font-style: italic;
+  animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both; /* Bouncy pop-in entrance */
+}
+
+/* Tags pop in with a spring-like bounce effect */
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.6) translateY(10px); } /* Small and low */
+  to { opacity: 1; transform: scale(1) translateY(0); }         /* Normal size and position */
+}
+
+.demo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;                    /* Space between the emoji and the text */
+  padding: 1.1rem 2.5rem;
+  background: linear-gradient(135deg, var(--pink), var(--pink-light));
+  color: white;
+  border: none;
+  border-radius: 100px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(236,72,153,0.4);
+  transition: all 0.3s ease;
+}
+
+.demo-btn:hover {
+  transform: translateY(-2px);                      /* Floats up on hover */
+  box-shadow: 0 10px 32px rgba(236,72,153,0.5);    /* Shadow grows */
+}
+
+.demo-btn:active { transform: scale(0.97); } /* Slightly shrinks when actually clicked */
+
+/* ─── CTA SECTION ───────────────────────────────────────────────────────────── */
+.cta-section {
+  background: linear-gradient(135deg, var(--pink), #d946a8); /* Bold full-pink background */
+  padding: 7rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Tiny repeating dot pattern overlaid on the pink background for subtle texture */
+.cta-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* An inline SVG used as a repeating background pattern */
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='1.5' fill='rgba(255,255,255,0.15)'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.cta-section h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 900;
+  color: white;
+  margin-bottom: 1.5rem;
+  letter-spacing: -1px;
+  position: relative; /* Sits on top of the dot pattern (z-order) */
+}
+
+.cta-section p {
+  font-size: 1.2rem;
+  color: rgba(255,255,255,0.85); /* Slightly transparent white so it's softer */
+  margin-bottom: 3rem;
+  font-weight: 300;
+  position: relative;
+}
+
+.btn-white {
+  padding: 1.1rem 2.8rem;
+  background: white;               /* White button on the pink background ~~ high contrast */
+  color: var(--pink);              /* Pink text to stay on-brand */
+  border: none;
+  border-radius: 100px;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  transition: all 0.3s;
+  position: relative;
+  display: inline-block;
+}
+
+.btn-white:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px rgba(0,0,0,0.25);
+}
+
+/* ─── FOOTER ────────────────────────────────────────────────────────────────── */
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--dim);               /* Light grey text */
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border);
+  background: var(--bg);           /* Matches the page background */
+}
+img.feature-icon {
+  width: 4.5rem;
+  height: 4.5rem;
+  object-fit: contain;
+}
+
+
+footer a { color: var(--pink); text-decoration: none; } /* Footer links are pink */
+
+/* ─── MOBILE OVERRIDES ──────────────────────────────────────────────────────── */
+/* Everything below 768px wide (basically phones) gets these adjustments */
+@media (max-width: 768px) {
+  nav { padding: 0 1.5rem; }       /* Less side padding in the nav */
+  .nav-links { display: none; }    /* Hide the nav links entirely on mobile ~~ no hamburger menu here */
+  .hero h1 { font-size: 3rem; }   /* Make the headline smaller so it fits */
+  .hero-stats { gap: 1.5rem; padding: 1.5rem; } /* Tighten up the stats row */
+  .features, .how, .picker-teaser { padding: 4rem 1.5rem; } /* Less padding on sections */
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV BAR ──────────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-logo">Guidercise!</div> <!-- Brand name in the top left -->
+  <div class="nav-links">
+    <a href="#features">Features</a>       <!-- Scrolls down to the features section -->
+    <a href="#how">How it works</a>        <!-- Scrolls down to the how-it-works section -->
+    <a href="main.html">Workout Picker</a> <!-- Goes to the picker page -->
+    <a href="login.html" class="nav-cta" id="authBtn">Please log in</a>
+  </div>
+</nav>
+
+<!-- ── HERO SECTION ─────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <!-- These three divs are the big blurry background blobs ~~ purely decorative -->
+  <div class="hero-blob blob1"></div>
+  <div class="hero-blob blob2"></div>
+  <div class="hero-blob blob3"></div>
+
+  <!-- Main headline -->
+   
+<h3>localStorage.clear() to clear that silly local storage issue :,) </h3>
+  <h1>
+    GUIDERCISE :D <br>
+    <em>...always for you</em> <!-- The italic bit gets the pink-orange gradient -->
+  </h1>
+
+  <!-- Subheading / description -->
+  <p class="hero-sub">
+    excercise should be accessible to all that's what we believe and guarantee at guidercise (at always no cost ~) always free and always fun >:D
+  </p>
+
+  <!-- The two hero buttons -->
+  <div class="hero-actions">
+    <a href="main.html" class="btn-primary">Start today's session</a> <!-- Main CTA -->
+    <a href="#how" class="btn-secondary">How it works</a>             <!-- Soft secondary CTA -->
+  </div>
+
+  <!-- Three little stat boxes at the bottom of the hero -->
+  <div class="hero-stats">
+    <div>
+      <span class="hero-stat-num">100%</span>
+      <span class="hero-stat-label">Efficient !!</span>
+    </div>
+    <div>
+      <span class="hero-stat-num">4+</span>
+      <span class="hero-stat-label">Guided exercises !!</span>
+    </div>
+    <div>
+      <span class="hero-stat-num">0</span>
+      <span class="hero-stat-label">Equipment needed !!</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURES SECTION ─────────────────────────────────────────────────────── -->
+<section class="features" id="features"> <!-- id="features" is what the nav link scrolls to -->
+  <p class="section-label">Why Guidercise?</p>
+  <h2 class="section-title">Working out is for <em>EEVRYONE !!</em></h2>
+  <p class="section-sub">[slogan?] replace later with the slogan lol</p>
+
+  <!-- 6 feature cards in a responsive grid -->
+  <div class="features-grid">
+
+    <!-- First card has the "highlight" class which gives it a stronger pink tint -->
+    <div class="feature-card highlight">
+      <img src="grid1.png" class="feature-icon" alt="workout picker">
+      <h4>these sessions are AUDIBLE</h4>
+      <p>No need to strain your eyes guiderciser !! just listen and we shall do the rest</p>
+    </div>
+
+    <div class="feature-card">
+      <img src="grid2.png" class="feature-icon" alt="workout picker">
+      <h4>listen to your music too!</h4>
+      <p>choose ur own soundtrack for this workout !! not supporting youttube integration but stay *tuned* pun intended</p>
+    </div>
+
+    <div class="feature-card">
+     <img src="grid3.png" class="feature-icon" alt="workout picker">
+      <h4>this is (mostly) custom !</h4>
+      <p>you can do ANYTHING in this app! no need to swap through many at a time :D</p>
+    </div>
+
+    <div class="feature-card">
+      <img src="grid4.png" class="feature-icon" alt="workout picker">
+      <h4>super detailed workout picker</h4>
+      <p>if you can't decide nw we'll pick it c:</p>
+    </div>
+
+    <div class="feature-card">
+      <img src="grdi5.png" class="feature-icon" alt="workout picker">
+      <h4>made for all and inbetween :D</h4>
+      <p>great choice! this app is made for everyone no matter your skill or physical limitations :D</p>
+    </div>
+
+    <div class="feature-card">
+      <img src="grid6.png" class="feature-icon" alt="workout picker">
+      <h4>no time?? no prob</h4>
+      <p>yup thats right quick sessions with alllll the results c;</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS SECTION ─────────────────────────────────────────────────── -->
+<section class="how" id="how"> <!-- id="how" is what the nav link scrolls to -->
+  <div class="how-inner">
+    <p class="section-label">were here for your workout</p>
+    <h2 class="section-title">fact: theres three steps to a <em>good</em> workout</h2>
+    <p class="section-sub">yes its easy on purpose no hassle guranteed :D.</p>
+
+    <!-- The three numbered steps in a row -->
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div> <!-- Pink numbered square -->
+        <h4>the app is coming soon ;3</h4>
+        
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>just start it</h4>
+        <p>smash that big "LET'S START" button heck yeah !</p>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>enjoy :D</h4>
+        <p>never a hassle always fun and enjoyable so what're you waiting for? go for ittt</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ── FINAL CTA SECTION ─────────────────────────────────────────────────────── -->
+<section class="cta-section">
+  <h2>like what you see?</h2>
+  <p>we have an app ! (coming soon)</p>
+  <a href="guidercise-app.html" class="btn-white">open Guidercise app →</a>
+</section>
+
+<!-- ── FOOTER ────────────────────────────────────────────────────────────────── -->
+<footer>
+  we all deserve to enjoy a good workout! c: &nbsp;·&nbsp; <!-- · is just a separator dot -->
+  <a href="guidercise-app.html">Open App</a> &nbsp;·&nbsp;
+  <a href="main.html">Workout Picker</a>
+</footer>
+
+<!-- ── JAVASCRIPT ────────────────────────────────────────────────────────────── -->
+<script>
+  // Check if someone is logged in and update the button accordingly
+const isLoggedIn = localStorage.getItem('guidercise_logged_in') === 'true';
+const authBtn = document.getElementById('authBtn');
+
+if (isLoggedIn) {
+  const user = localStorage.getItem('guidercise_current_user') || 'guiderciser';
+  authBtn.textContent = 'log out (' + user + ')'; // shows "log out (username)"
+  authBtn.href = '#'; // don't navigate anywhere, just run the function below
+  authBtn.onclick = function(e) {
+    e.preventDefault(); // stop the link from doing anything
+    localStorage.removeItem('guidercise_logged_in');
+    localStorage.removeItem('guidercise_current_user');
+    window.location.href = 'login.html'; // send them to login after logging out
+  };
+} else {
+  authBtn.textContent = 'Please log in';
+  authBtn.href = 'login.html';
+}
+// The full list of possible workout options the picker can choose from
+const workouts = [
+  "Pushing",
+  "Pulling peg 1",
+  "Pulling difficulty 2",
+  "Pulling difficulty 3",
+  "Seated twists",
+  "30g Weight pulling peg 1",
+  "50g Weight pulling peg 1",
+  "70g weight pulling peg 1",
+  "30g Weight pulling peg 2",
+  "50g Weight pulling peg 2",
+  "70g Weight pulling peg 2",
+  "30g Weight pulling peg 3",
+  "50g Weight pulling peg 3",
+  "70g Weight pulling peg 3",
+  "Spinal stretch",
+  "Chest opener",
+  "Figure-four stretch",
+  "Seated marching",
+  "Standing balance",
+];
+
+// This runs every time someone clicks the "Pick my workout!" button
+function runDemo() {
+  // Shuffle the array into a random order using a classic trick:
+  // sort() compares pairs ~~ returning a random positive or negative number mixes them up
+  const shuffled = workouts.sort(() => Math.random() - 0.5);
+
+  // Grab 2, 3, or 4 items from the start of the shuffled array
+  // Math.floor(Math.random() * 3) gives 0, 1, or 2 ~~ adding 2 makes it 2, 3, or 4
+  const pick = shuffled.slice(0, Math.floor(Math.random() * 3) + 2);
+
+  // Get the output container element so we can put content inside it
+  const out = document.getElementById('demoOutput');
+
+  // Turn each picked workout name into a pink pill tag
+  // Then join them all into one HTML string and drop it into the output div
+  // The animation-delay staggers each tag's pop-in by 80ms so they don't all appear at once
+  out.innerHTML = pick.map((w, i) => 
+    `<span class="demo-tag" style="animation-delay:${i * 0.08}s">${w}</span>`
+  ).join('');
+}
+</script>
+</body>
+</html>
+
+
+
+
+localStorage.clear() to clear that silly local storage issue :,)

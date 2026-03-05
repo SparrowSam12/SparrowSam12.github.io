@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guidercise — Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf8f6;
+  --pink-soft: #ffe8f0;
+  --pink: #ec4899;
+  --pink-light: #f472b6;
+  --orange: #fb923c;
+  --text: #1a1a1a;
+  --muted: #64748b;
+  --dim: #94a3b8;
+  --border: rgba(219,112,147,0.2);
+  --card: rgba(255,192,203,0.12);
+  --error: #ef4444;
+  --success: #10b981;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── BACKGROUND BLOBS ── same vibe as the other pages */
+.bg-blobs { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.blob { position: absolute; border-radius: 50%; filter: blur(90px); animation: floatBlob 10s ease-in-out infinite; }
+.blob1 { width: 700px; height: 700px; background: radial-gradient(circle, rgba(236,72,153,0.16), transparent 70%); top: -200px; left: -200px; }
+.blob2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(251,146,60,0.1), transparent 70%); bottom: -100px; right: -100px; animation-delay: 4s; }
+.blob3 { width: 350px; height: 350px; background: radial-gradient(circle, rgba(244,114,182,0.13), transparent 70%); top: 50%; left: 60%; animation-delay: 2s; }
+@keyframes floatBlob { 0%,100% { transform: translate(0,0); } 50% { transform: translate(20px,-25px); } }
+
+/* ── MAIN CARD ── */
+.login-wrapper {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 440px;
+  padding: 1rem;
+  animation: fadeUp 0.7s ease both;
+}
+
+.login-card {
+  background: rgba(255,255,255,0.7);
+  border: 1px solid var(--border);
+  border-radius: 32px;
+  padding: 3rem 2.5rem;
+  backdrop-filter: blur(24px);
+  box-shadow: 0 24px 80px rgba(219,112,147,0.18);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Pink line across the top of the card */
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--pink), var(--orange), transparent);
+}
+
+/* Soft pink glow at the top inside the card */
+.login-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(236,72,153,0.07), transparent 60%);
+  pointer-events: none;
+}
+
+/* ── LOGO / HEADER ── */
+.card-logo {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.logo-text {
+  font-family: 'Fraunces', serif;
+  font-size: 2.2rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--pink), var(--pink-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.logo-sub {
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+/* ── TABS (login / register) ── */
+.tabs {
+  display: flex;
+  gap: 0.4rem;
+  background: rgba(236,72,153,0.06);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.3rem;
+  margin-bottom: 2rem;
+}
+
+.tab {
+  flex: 1;
+  padding: 0.65rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  background: transparent;
+  color: var(--muted);
+  transition: all 0.2s;
+}
+
+.tab.active {
+  background: linear-gradient(135deg, var(--pink), var(--pink-light));
+  color: white;
+  box-shadow: 0 4px 12px rgba(236,72,153,0.35);
+}
+
+/* ── FORM FIELDS ── */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.9rem 1.1rem;
+  background: rgba(255,255,255,0.8);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  transition: all 0.2s;
+  outline: none;
+}
+
+.form-group input:focus {
+  border-color: var(--pink);
+  box-shadow: 0 0 0 3px rgba(236,72,153,0.12);
+  background: white;
+}
+
+.form-group input::placeholder {
+  color: var(--dim);
+}
+
+/* ── SUBMIT BUTTON ── */
+.submit-btn {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--pink), var(--pink-light));
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(236,72,153,0.4);
+  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  margin-top: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 10px 30px rgba(236,72,153,0.5);
+}
+
+.submit-btn:active { transform: scale(0.98); }
+
+/* ── MESSAGES (error / success) ── */
+.message {
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  margin-bottom: 1.25rem;
+  display: none; /* hidden by default, shown by JS */
+  animation: fadeUp 0.3s ease both;
+}
+
+.message.error {
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.25);
+  color: var(--error);
+}
+
+.message.success {
+  background: rgba(16,185,129,0.1);
+  border: 1px solid rgba(16,185,129,0.25);
+  color: var(--success);
+}
+
+/* ── DIVIDER ── */
+.divider {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--dim);
+  margin: 1.25rem 0;
+  position: relative;
+}
+
+.divider::before, .divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 38%;
+  height: 1px;
+  background: var(--border);
+}
+.divider::before { left: 0; }
+.divider::after { right: 0; }
+
+/* ── GUEST BUTTON ── */
+.guest-btn {
+  width: 100%;
+  padding: 0.9rem;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.guest-btn:hover {
+  background: rgba(236,72,153,0.05);
+  border-color: rgba(236,72,153,0.3);
+  color: var(--pink);
+}
+
+/* ── FOOTER NOTE ── */
+.card-footer-note {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--dim);
+  margin-top: 1.75rem;
+  line-height: 1.6;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+.shake { animation: shake 0.4s ease; }
+</style>
+</head>
+<body>
+
+<!-- Background blobs matching the other pages -->
+<div class="bg-blobs">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+</div>
+
+<div class="login-wrapper">
+  <div class="login-card" id="loginCard">
+
+    <!-- Logo -->
+    <div class="card-logo">
+      <span class="logo-text">Guidercise!</span>
+      <span class="logo-sub">move with joy ~</span>
+    </div>
+
+    <!-- Login / Register tabs -->
+    <div class="tabs">
+      <button class="tab active" id="tabLogin" onclick="switchTab('login')">Log in</button>
+      <button class="tab" id="tabRegister" onclick="switchTab('register')">Register</button>
+    </div>
+
+    <!-- Message box — shows errors and success messages -->
+    <div class="message" id="msgBox"></div>
+
+    <!-- ── LOGIN FORM ── -->
+    <div id="loginForm">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="loginUser" placeholder="your username" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPass" placeholder="your password" autocomplete="current-password">
+      </div>
+      <button class="submit-btn" onclick="doLogin()">Let's go! →</button>
+
+      <div class="divider">or</div>
+      <button class="guest-btn" onclick="doGuest()">Continue as guest</button>
+    </div>
+
+    <!-- ── REGISTER FORM (hidden by default) ── -->
+    <div id="registerForm" style="display:none;">
+      <div class="form-group">
+        <label>Choose a username</label>
+        <input type="text" id="regUser" placeholder="something fun :)" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label>Choose a password</label>
+        <input type="password" id="regPass" placeholder="make it a good one!" autocomplete="new-password">
+      </div>
+      <div class="form-group">
+        <label>Confirm password</label>
+        <input type="password" id="regPass2" placeholder="same again" autocomplete="new-password">
+      </div>
+      <button class="submit-btn" onclick="doRegister()">Create my account!</button>
+    </div>
+
+    <!-- Small note about storage -->
+    <p class="card-footer-note">
+      credentials are saved locally in your browser only —<br>nothing is sent anywhere c:
+    </p>
+
+  </div>
+</div>
+
+<script>
+// ── WHERE TO GO AFTER LOGIN ──────────────────────────────────────────────────
+// Change this to whatever page you want users to land on after logging in
+const REDIRECT_AFTER_LOGIN = 'index.html';
+
+// ── CHECK IF ALREADY LOGGED IN ───────────────────────────────────────────────
+// If someone hits the login page but is already logged in, send them straight through
+if (localStorage.getItem('guidercise_logged_in') === 'true') {
+  window.location.href = REDIRECT_AFTER_LOGIN;
+}
+
+// ── TAB SWITCHER ─────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  // Clear any messages when switching tabs
+  hideMsg();
+
+  if (tab === 'login') {
+    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('registerForm').style.display = 'none';
+    document.getElementById('tabLogin').classList.add('active');
+    document.getElementById('tabRegister').classList.remove('active');
+  } else {
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('registerForm').style.display = 'block';
+    document.getElementById('tabLogin').classList.remove('active');
+    document.getElementById('tabRegister').classList.add('active');
+  }
+}
+
+// ── MESSAGE HELPERS ──────────────────────────────────────────────────────────
+function showMsg(text, type) {
+  // type is either 'error' or 'success'
+  const box = document.getElementById('msgBox');
+  box.textContent = text;
+  box.className = 'message ' + type;
+  box.style.display = 'block';
+}
+
+function hideMsg() {
+  const box = document.getElementById('msgBox');
+  box.style.display = 'none';
+}
+
+// Shake the card to signal something went wrong
+function shakeCard() {
+  const card = document.getElementById('loginCard');
+  card.classList.remove('shake');
+  void card.offsetWidth; // force reflow so the animation restarts if already shaking
+  card.classList.add('shake');
+}
+
+// ── GET ALL USERS FROM LOCALSTORAGE ─────────────────────────────────────────
+// Users are stored as a JSON object: { username: hashedPassword, ... }
+function getUsers() {
+  const raw = localStorage.getItem('guidercise_users');
+  return raw ? JSON.parse(raw) : {};
+}
+
+function saveUsers(users) {
+  localStorage.setItem('guidercise_users', JSON.stringify(users));
+}
+
+// ── VERY SIMPLE HASH ─────────────────────────────────────────────────────────
+// This is NOT cryptographically secure — it's just so passwords aren't stored
+// in plain text in localStorage. For a real app you'd want bcrypt on a server.
+function simpleHash(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // convert to 32-bit integer
+  }
+  return hash.toString(36); // convert to a short string
+}
+
+// ── LOGIN ────────────────────────────────────────────────────────────────────
+function doLogin() {
+  const username = document.getElementById('loginUser').value.trim();
+  const password = document.getElementById('loginPass').value;
+
+  // Basic empty field check
+  if (!username || !password) {
+    showMsg('fill in both fields first! :)', 'error');
+    shakeCard();
+    return;
+  }
+
+  const users = getUsers();
+
+  // Check if the username exists
+  if (!users[username]) {
+    showMsg("hmm that username doesn't exist — want to register instead?", 'error');
+    shakeCard();
+    return;
+  }
+
+  // Check if the password matches the stored hash
+  if (users[username] !== simpleHash(password)) {
+    showMsg('wrong password! give it another go :)', 'error');
+    shakeCard();
+    return;
+  }
+
+  // All good! Mark as logged in and save the username for use on other pages
+  localStorage.setItem('guidercise_logged_in', 'true');
+  localStorage.setItem('guidercise_current_user', username);
+
+  showMsg('yay!! logging you in ~', 'success');
+
+  // Short delay so the success message is visible before redirect
+  setTimeout(() => { window.location.href = REDIRECT_AFTER_LOGIN; }, 700);
+}
+
+// ── REGISTER ─────────────────────────────────────────────────────────────────
+function doRegister() {
+  const username = document.getElementById('regUser').value.trim();
+  const password = document.getElementById('regPass').value;
+  const password2 = document.getElementById('regPass2').value;
+
+  // Empty field check
+  if (!username || !password || !password2) {
+    showMsg('fill everything in first!', 'error');
+    shakeCard();
+    return;
+  }
+
+  // Username length
+  if (username.length < 3) {
+    showMsg('username needs to be at least 3 characters', 'error');
+    shakeCard();
+    return;
+  }
+
+  // Password length
+  if (password.length < 4) {
+    showMsg('password needs to be at least 4 characters', 'error');
+    shakeCard();
+    return;
+  }
+
+  // Passwords match check
+  if (password !== password2) {
+    showMsg("passwords don't match!", 'error');
+    shakeCard();
+    return;
+  }
+
+  const users = getUsers();
+
+  // Username taken check
+  if (users[username]) {
+    showMsg('that username is already taken — try another one!', 'error');
+    shakeCard();
+    return;
+  }
+
+  // Save the new user with their hashed password
+  users[username] = simpleHash(password);
+  saveUsers(users);
+
+  // Log them straight in after registering
+  localStorage.setItem('guidercise_logged_in', 'true');
+  localStorage.setItem('guidercise_current_user', username);
+
+  showMsg('account created!! welcome to Guidercise :D', 'success');
+  setTimeout(() => { window.location.href = REDIRECT_AFTER_LOGIN; }, 800);
+}
+
+// ── GUEST ────────────────────────────────────────────────────────────────────
+// Lets someone skip login entirely — they're marked as a guest
+function doGuest() {
+  localStorage.setItem('guidercise_logged_in', 'true');
+  localStorage.setItem('guidercise_current_user', 'guest');
+  window.location.href = REDIRECT_AFTER_LOGIN;
+}
+
+// ── ENTER KEY SUPPORT ────────────────────────────────────────────────────────
+// Press Enter to submit whichever form is currently visible
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter') return;
+  const loginVisible = document.getElementById('loginForm').style.display !== 'none';
+  if (loginVisible) doLogin();
+  else doRegister();
+});
+</script>
+</body>
+</html>
