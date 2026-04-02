@@ -247,7 +247,7 @@ footer a { color: var(--pink); text-decoration: none; }
   <div class="page-header">
     <span class="label"> this is the picker see change log</span>
     <h1>Guidercise<em>workout</em></h1>
-    <p>Can't decide? WE WILL >:DD <strong>Let's gooooo</strong> launch youre guided audio session!</p>
+    <p>Can't decide? WE WILL > D <strong>Let's gooooo</strong> launch youre guided audio session!</p>
   </div>
 
   <div class="output-card" id="outputCard">
@@ -264,7 +264,7 @@ footer a { color: var(--pink); text-decoration: none; }
       <button class="big-btn" id="pickBtn" onclick="pickWorkout()">
         <div class="btn-inner">
           <img src="ehedice.png" class="btn-dice" alt="dice" style="width:1.4rem;height:1.4rem;object-fit:contain;vertical-align:middle;">
-          let fate decide your workout >:D
+          let fate decide your workout > 
         </div>
       </button>
       <button class="go-btn" id="goBtn" onclick="launchSession()">
@@ -309,7 +309,7 @@ footer a { color: var(--pink); text-decoration: none; }
       <div class="status-item">
         <div class="status-dot"></div>
         <span class="status-label">Status</span>
-        <span class="status-value" id="sStatus">yup >:D</span>
+        <span class="status-value" id="sStatus">yup > </span>
       </div>
       <div class="status-item">
         <div class="status-dot" style="background:var(--orange);box-shadow:0 0 8px var(--orange);"></div>
@@ -388,7 +388,7 @@ footer a { color: var(--pink); text-decoration: none; }
 
   <div class="session-main">
     <div class="session-topnav">
-      <h1 id="sessionTitle">Let's work out !! >:D</h1>
+      <h1 id="sessionTitle">Let's work out !! > </h1>
       <div class="nav-stats">
         <div class="stat">
           <div class="stat-value" id="sessionsDoneCount">0</div>
@@ -421,7 +421,7 @@ footer a { color: var(--pink); text-decoration: none; }
         <h3>Today's Exercises</h3>
         <ul class="session-list" id="sessionOverviewList"></ul>
         <div class="session-note">
-         <img src="grid1.png" class="sillybilly" alt="workout picker"><strong>Remember:</strong> Audio is on!! :DD
+         <img src="grid1.png" class="sillybilly" alt="workout picker"><strong>Remember:</strong> Audio is on!!  D
         </div>
       </section>
 
@@ -486,25 +486,25 @@ const allWorkouts = [
 ];
 
 const exerciseCues = {
-  "Pushing": "This is for wrist rolls silly",
-  "Pulling peg 1": "Please adjust the slider on your (mech name) to peg 1 and pull the bands",
-  "Pulling difficulty 2": "Please adjust the slider on your (mech name) to peg 2 and pull the bands",
-  "Pulling difficulty 3": "Please adjust the slider on your (mech name) to peg 3 and pull the bands",
-  "Seated twists": "Seated twists! Twist it heck yeah",
-  "30g Weight pulling peg 1": "Please adjust the slider on your (mech name) to peg 1 and attach the 30g weight and pull the bands",
-  "50g Weight pulling peg 1": "Please adjust the slider on your (mech name) to peg 1 and attach the 50g weight and pull the bands",
-  "70g weight pulling peg 1": "Please adjust the slider on your (mech name) to peg 1 and attach the 70g weight and pull the bands",
-  "30g Weight pulling peg 2": "Please adjust the slider on your (mech name) to peg 2 and attach the 30g weight and pull the bands",
-  "50g Weight pulling peg 2": "Please adjust the slider on your (mech name) to peg 2 and attach the 50g weight and pull the bands",
-  "70g Weight pulling peg 2": "Please adjust the slider on your (mech name) to peg 2 and attach the 70g weight and pull the bands",
-  "30g Weight pulling peg 3": "Please adjust the slider on your (mech name) to peg 3 and attach the 30g weight and pull the bands",
-  "50g Weight pulling peg 3": "Please adjust the slider on your (mech name) to peg 3 and attach the 50g weight and pull the bands",
-  "70g Weight pulling peg 3": "Please adjust the slider on your (mech name) to peg 3 and attach the 70g weight and pull the bands",
+  "Pushing": "Please extend your arms and gently roll your wrist, this is called a wrist roll!",
+  "Pulling peg 1": "Please adjust the slider on your Guidercise Mechanism to peg 1 and pull the bands",
+  "Pulling difficulty 2": "Please adjust the slider on your Guidercise Mechanism to peg 2 and pull the bands",
+  "Pulling difficulty 3": "Please adjust the slider on your Guidercise Mechanism to peg 3 and pull the bands",
+  "Seated twists": "Seated twists are next. Please sit and gently twist your torso side so side.",
+  "30g Weight pulling peg 1": "Please adjust the slider on your Guidercise Mechanism to peg 1 and attach the 30g weight and pull the bands",
+  "50g Weight pulling peg 1": "Please adjust the slider on your Guidercise Mechanism to peg 1 and attach the 50g weight and pull the bands",
+  "70g weight pulling peg 1": "Please adjust the slider on your Guidercise Mechanism to peg 1 and attach the 70g weight and pull the bands",
+  "30g Weight pulling peg 2": "Please adjust the slider on your Guidercise Mechanism to peg 2 and attach the 30g weight and pull the bands",
+  "50g Weight pulling peg 2": "Please adjust the slider on your Guidercise Mechanism to peg 2 and attach the 50g weight and pull the bands",
+  "70g Weight pulling peg 2": "Please adjust the slider on your Guidercise Mechanism to peg 2 and attach the 70g weight and pull the bands",
+  "30g Weight pulling peg 3": "Please adjust the slider on your Guidercise Mechanism to peg 3 and attach the 30g weight and pull the bands",
+  "50g Weight pulling peg 3": "Please adjust the slider on your Guidercise Mechanism to peg 3 and attach the 50g weight and pull the bands",
+  "70g Weight pulling peg 3": "Please adjust the slider on your Guidercise Mechanism to peg 3 and attach the 70g weight and pull the bands",
   "Spinal stretch": "Please try to stretch raise your arms and relax your spine and torso. Adjust your form upwards and breathe in slowly",
   "Chest opener": "Chest opener to do this, please stretch your arm and gently cross them across your upper body",
-  "Figure-four stretch": "Figure four stretch please stretch to the sides ",
-  "Seated marching": "stay seated and march on the spot",
-  "Standing balance": "Standing balance keep it up",
+  "Figure-four stretch": "Stretch your arms and legs gently into a figure four position",
+  "Seated marching": "Stay seated and slowly move your legs. Ensure your back is straight this is to loosen your leg muscles.",
+  "Standing balance": "reach your arms out and stay balanced. Don't lose balance.",
 };
 
 /* ── STATE ── */
@@ -581,9 +581,9 @@ function launchSession() {
 
   // Build the routine: intro + one cue per exercise + outro
   routine = [
-    `WELCOMEE youve chosen ${currentPicks.length} exercises let's get into it ~~ you've got this!!`,
-    ...currentPicks.map(ex => exerciseCues[ex] || `next we got ${ex} aaand the most important this is u have fun!`),
-    "lets gooo!! good job :D"
+    `Welcome! You have chosen ${currentPicks.length} exercises. Let's jump into it ~~ you've got this!!`,
+    ...currentPicks.map(ex => exerciseCues[ex] || `next we got ${ex} aand the most important this is you have fun!`),
+    "lets gooo!! ...good job!"
   ];
 
   // Reset session state
@@ -727,7 +727,7 @@ function completeSession() {
   document.getElementById('sessionsDoneCount').textContent = totalSessionsDone;
   document.getElementById('totalTimeDisplay').textContent = totalMinutes + 'm';
   document.getElementById('sStatus').textContent = 'Done ✓';
-  showExercise("lets go!! you're done! :D howd that feel?");
+  showExercise("lets go!! you're done!   howd that feel?");
   speak("Lets go! you did it! How'd that feel?");
   document.getElementById('timerDisplay').textContent = '✓';
   currentPicks.forEach((_, i) => {
