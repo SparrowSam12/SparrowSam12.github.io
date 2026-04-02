@@ -516,7 +516,7 @@ let routine = [];
 let routineIndex = 0;
 let paused = false;
 let timer, countdown;
-let voiceSpeed = 0.9;
+let voiceSpeed = 0.7;
 let sessionStartTime = null;
 let totalSessionsDone = 0;
 let totalMinutes = 0;
@@ -581,7 +581,7 @@ function launchSession() {
 
   // Build the routine: intro + one cue per exercise + outro
   routine = [
-    `Welcome! You have chosen ${currentPicks.length} exercises. Let's jump into it ~~ you've got this!!`,
+    `Welcome!    You have chosen ${currentPicks.length} exercises.    Let's jump into it ~~ you've got this!!`,
     ...currentPicks.map(ex => exerciseCues[ex] || `next we got ${ex} aand the most important this is you have fun!`),
     "lets gooo!! ...good job!"
   ];
@@ -664,7 +664,7 @@ function speak(text) {
   window.speechSynthesis.cancel();
   const msg = new SpeechSynthesisUtterance(text);
   msg.rate = voiceSpeed;
-  msg.pitch = 1.0;
+  msg.pitch = 2.0;
   msg.volume = 1.0;
   const voices = window.speechSynthesis.getVoices();
   const femaleVoice = voices.find(v =>
