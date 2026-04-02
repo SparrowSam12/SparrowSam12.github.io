@@ -708,7 +708,7 @@ function startRoutine() {
   speak(routine[routineIndex]);
   updateProgressIndicator();
   const isIntroOrOutro = routineIndex === 0 || routineIndex === routine.length - 1;
-  const dur = isIntroOrOutro ? 5 : 12;
+  const dur = isIntroOrOutro ? 8 : 30;
   startTimer(dur);
   clearTimeout(timer);
   timer = setTimeout(() => {
